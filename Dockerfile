@@ -7,18 +7,18 @@ ENV NVIDIA_GPU=false \
 	OPENALPR=false \
 	YOLO=false \
 	YOLO_TINY=true \
-	YOLO_HOST='localhost' \
-	YOLO_PORT='8080' \
+	YOLO_HOST=localhost \
+	YOLO_PORT=8080 \
 	LD_LIBRARY_PATH=/usr/local/cuda/lib \
 	PATH=$PATH:/usr/local/cuda/bin \
-	APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1\
-#ENV ADMIN_USER=admin@shinobi.video \
+	APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 \
+	PLUGINKEY_YOLO=574e44c1-dbff-3dc0-0f94-9d4a3dc0f194
+#    ADMIN_USER=admin@shinobi.video \
 #    ADMIN_PASSWORD=admin \
 #    CRON_KEY=fd6c7849-904d-47ea-922b-5143358ba0de \
 #    PLUGINKEY_MOTION=b7502fd9-506c-4dda-9b56-8e699a6bc41c \
 #    PLUGINKEY_OPENCV=f078bcfe-c39a-4eb5-bd52-9382ca828e8a \
 #    PLUGINKEY_OPENALPR=dbff574e-9d4a-44c1-b578-3dc0f1944a3c \
-    PLUGINKEY_YOLO=574e44c1-dbff-3dc0-0f94-9d4a3dc0f194
 #    #leave these ENVs alone unless you know what you are doing
 #    MYSQL_USER=majesticflame \
 #    MYSQL_PASSWORD=password \
@@ -35,7 +35,7 @@ RUN \
 	echo "Downloading OpenCV..." && \
     cd /opencv && \
     git clone https://github.com/opencv/opencv.git && \
-    cd /opencv && \
+    cd opencv && \
     git checkout 3.4.0 && \
     cd .. && \
     if [ ! -e "/opencv/opencv_contrib" ]; then \
