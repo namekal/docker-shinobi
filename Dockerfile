@@ -81,7 +81,7 @@ RUN	\
 	ldconfig && \
 	apt-get update && \
 	cd / && \
-	rm -rf /opencv ; \
+	rm -rf /opencv/* ; \
  fi
 
 #Install Cuda Toolkit
