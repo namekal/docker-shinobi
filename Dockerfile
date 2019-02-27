@@ -87,7 +87,7 @@ RUN	\
 #Install Cuda Toolkit
  RUN \
  if [ "${YOLO_TINY}" = "true" ] || [ "${YOLO_TINY}" = "TRUE" ] || \
-	[ "${YOLO}" = "true" ] || [ "${YOLO}" = "TRUE" ]; then ;\
+	[ "${YOLO}" = "true" ] || [ "${YOLO}" = "TRUE" ]; then \
 	if [ "${NVIDIA_GPU}" = "true" ] || [ "${NVIDIA_GPU}" = "TRUE" ]; then \
  		echo "------------------------------------------" && \
  		echo "-- Installing CUDA Toolkit and CUDA DNN --" && \
