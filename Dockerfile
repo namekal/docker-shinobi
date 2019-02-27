@@ -11,6 +11,7 @@ ENV NVIDIA_GPU=false \
 	YOLO_PORT='8080' \
 	LD_LIBRARY_PATH=/usr/local/cuda/lib \
 	PATH=$PATH:/usr/local/cuda/bin \
+	APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1\
 #ENV ADMIN_USER=admin@shinobi.video \
 #    ADMIN_PASSWORD=admin \
 #    CRON_KEY=fd6c7849-904d-47ea-922b-5143358ba0de \
@@ -82,7 +83,7 @@ RUN \
  	echo "-- Installing CUDA Toolkit and CUDA DNN --" && \
  	echo "------------------------------------------" && \
  	wget https://cdn.shinobi.video/installers/cuda-repo-ubuntu1710_9.2.148-1_amd64.deb -O cuda.deb && \
- 	apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1710/x86_64/7fa2af80.pub && \
+ 	sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1710/x86_64/7fa2af80.pub && \
  	dpkg -i cuda.deb && \
  	apt-get update -y && \
  	apt-get -o Dpkg::Options::="--force-overwrite" install cuda -y && \
