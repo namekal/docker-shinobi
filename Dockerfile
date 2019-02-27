@@ -2,11 +2,11 @@ FROM migoller/shinobidocker:debian
 
 VOLUME /opencv
 
-ENV NVIDIA_GPU \
-	OPENCV \
-	OPENALPR \
-	YOLO \
-	YOLO_TINY \
+ENV NVIDIA_GPU=false \
+	OPENCV=false \
+	OPENALPR=false \
+	YOLO=false \
+	YOLO_TINY=false \
 	YOLO_HOST \
 	YOLO_PORT \
 	LD_LIBRARY_PATH=/usr/local/cuda/lib \
@@ -74,7 +74,7 @@ RUN \
 	rm -rf /opencv ; \
  fi
 
-### Install Cuda Toolkit
+# Install Cuda Toolkit
  RUN \
  if [ "${YOLO_TINY}" == "true" ] || [ "${YOLO_TINY}" == "TRUE" ] || \
 	[ "${YOLO}" == "true" ] || [ "${YOLO}" == "TRUE" ]; then \
@@ -146,7 +146,8 @@ RUN \
 	npm install imagickal --unsafe-perm && \
 	npm audit fix --force && \
 	mv pm2Shinobi.yml pm2Shinobi.yml.bak && \
-	mv pm2Shinobi-yolo.yml pm2Shinobi.yml
+	mv pm2Shinobi-yolo.yml pm2Shinobi.yml ;\
+fi
 
 VOLUME ["/opt/shinobi/videos"]
 VOLUME ["/config"]
