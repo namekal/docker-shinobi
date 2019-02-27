@@ -59,10 +59,17 @@ RUN \
 	 	libxine2-dev libgstreamer-plugins-base1.0-0 \
 	 	libgstreamer-plugins-base1.0-dev libpng16-16 libpng-dev libv4l-dev \
 	 	libtbb-dev libmp3lame-dev libopencore-amrnb-dev libopencore-amrwb-dev \
-	 	libtheora-dev libvorbis-dev libxvidcore-dev v4l-utils libleptonica-dev && \
+	 	libtheora-dev libvorbis-dev libxvidcore-dev v4l-utils libleptonica-dev ; \
+	fi
+
+RUN	\
+ if [ "${OPENCV}" = "true" ] || [ "${OPENCV}" = "TRUE" ] || \
+	[ "${OPENALPR}" = "true" ] || [ "${OPENALPR}" = "TRUE" ] || \
+	[ "${YOLO_TINY}" = "true" ] || [ "${YOLO_TINY}" = "TRUE" ] || \
+	[ "${YOLO}" = "true" ] || [ "${YOLO}" = "TRUE" ]; then \
 	LD_LIBRARY_PATH=/usr/local/cuda/lib && \
 	PATH=$PATH:/usr/local/cuda/bin && \
-	 cmake -D CMAKE_INSTALL_PREFIX=/usr/local -D WITH_NVCUVID=ON -D FORCE_VTK=ON -D WITH_XINE=ON \
+	cmake -D CMAKE_INSTALL_PREFIX=/usr/local -D WITH_NVCUVID=ON -D FORCE_VTK=ON -D WITH_XINE=ON \
 		-D WITH_CUDA=ON -D WITH_OPENGL=ON -D WITH_TBB=ON -D WITH_OPENCL=ON -D CMAKE_BUILD_TYPE=RELEASE \
 		-D CUDA_NVCC_FLAGS="-D_FORCE_INLINES --expt-relaxed-constexpr" -D WITH_GDAL=ON \
 		-D OPENCV_EXTRA_MODULES_PATH=./opencv_contrib/modules/ \
