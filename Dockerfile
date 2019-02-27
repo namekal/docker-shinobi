@@ -6,7 +6,7 @@ ENV NVIDIA_GPU=false \
 	OPENCV=false \
 	OPENALPR=false \
 	YOLO=false \
-	YOLO_TINY=false \
+	YOLO_TINY=true \
 	YOLO_HOST='localhost' \
 	YOLO_PORT='8080' \
 	LD_LIBRARY_PATH=/usr/local/cuda/lib \
@@ -149,6 +149,7 @@ RUN \
 	mv pm2Shinobi-yolo.yml pm2Shinobi.yml ;\
 fi
 
+WORKDIR /opt/shinobi
 
 VOLUME ["/opt/shinobi/videos"]
 VOLUME ["/config"]
