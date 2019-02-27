@@ -7,8 +7,8 @@ ENV NVIDIA_GPU=false \
 	OPENALPR=false \
 	YOLO=false \
 	YOLO_TINY=false \
-	YOLO_HOST \
-	YOLO_PORT \
+	YOLO_HOST='localhost' \
+	YOLO_PORT='8080' \
 	LD_LIBRARY_PATH=/usr/local/cuda/lib \
 	PATH=$PATH:/usr/local/cuda/bin \
 #ENV ADMIN_USER=admin@shinobi.video \
