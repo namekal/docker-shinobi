@@ -92,9 +92,11 @@ RUN	\
  	echo "-- Installing CUDA Toolkit and CUDA DNN --" && \
  	echo "------------------------------------------" && \
  	wget https://cdn.shinobi.video/installers/cuda-repo-ubuntu1710_9.2.148-1_amd64.deb -O cuda.deb && \
+	wget https://developer.nvidia.com/compute/cuda/9.2/Prod2/local_installers/cuda-repo-ubuntu1710-9-2-local_9.2.148-1_amd64 -O cuda9.2.deb && \
  	apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1710/x86_64/7fa2af80.pub && \
 	apt-get -o Dpkg::Options::="--force-overwrite" install --fix-broken -y && \
 	dpkg --configure -a && \
+	dpkg -i cuda9.2.deb && \
 	dpkg -i cuda.deb && \
 	apt-get install -f && \
 	apt-get clean && \
