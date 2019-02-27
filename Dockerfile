@@ -149,8 +149,11 @@ RUN \
 	mv pm2Shinobi-yolo.yml pm2Shinobi.yml ;\
 fi
 
+
 VOLUME ["/opt/shinobi/videos"]
 VOLUME ["/config"]
 VOLUME ["/var/lib/mysql"]
+
+ENTRYPOINT ["/opt/shinobi/docker-entrypoint.sh"]
 
 CMD ["pm2-docker", "pm2Shinobi.yml"]
