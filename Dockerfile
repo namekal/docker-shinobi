@@ -43,8 +43,8 @@ RUN \
         git clone https://github.com/opencv/opencv_contrib.git && \
         cd /opencv_contrib && \
         git checkout 3.4.0 && \
-        cd .. \
-	fi \
+        cd .. ;\
+	fi && \
  	apt-get update && \
  	apt-get install -y \
  		libjpeg-dev libpango1.0-dev libgif-dev build-essential gcc-6 g++-6 \
@@ -71,7 +71,7 @@ RUN \
 	echo "/usr/local/lib" > /etc/ld.so.conf.d/opencv.conf && \
 	ldconfig && \
 	apt-get update && \
-	rm -rf /opencv; \
+	rm -rf /opencv ; \
  fi
 
 ### Install Cuda Toolkit
