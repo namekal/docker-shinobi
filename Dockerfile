@@ -87,28 +87,30 @@ RUN	\
 #Install Cuda Toolkit
  RUN \
  if [ "${YOLO_TINY}" = "true" ] || [ "${YOLO_TINY}" = "TRUE" ] || \
-	[ "${YOLO}" = "true" ] || [ "${YOLO}" = "TRUE" ]; then \
- 	echo "------------------------------------------" && \
- 	echo "-- Installing CUDA Toolkit and CUDA DNN --" && \
- 	echo "------------------------------------------" && \
- 	wget https://cdn.shinobi.video/installers/cuda-repo-ubuntu1710_9.2.148-1_amd64.deb -O cuda.deb && \
-	wget https://developer.nvidia.com/compute/cuda/9.2/Prod2/local_installers/cuda-repo-ubuntu1710-9-2-local_9.2.148-1_amd64 -O cuda9.2.deb && \
- 	apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1710/x86_64/7fa2af80.pub && \
-	apt-get -o Dpkg::Options::="--force-overwrite" install --fix-broken -y && \
-	dpkg --configure -a && \
-	dpkg -i cuda9.2.deb && \
-	dpkg -i cuda.deb && \
-	apt-get install -f && \
-	apt-get clean && \
- 	apt-get update -y && \
- 	apt-get -o Dpkg::Options::="--force-overwrite" install cuda -y && \
- 	wget https://cdn.shinobi.video/installers/libcudnn7_7.2.1.38-1+cuda9.2_amd64.deb -O cuda-dnn.deb && \
- 	dpkg -i cuda-dnn.deb && \
- 	wget https://cdn.shinobi.video/installers/libcudnn7-dev_7.2.1.38-1+cuda9.2_amd64.deb -O cuda-dnn-dev.deb && \
- 	dpkg -i cuda-dnn-dev.deb && \
- 	echo "-- Cleaning Up --" && \
- 	rm -f *.deb; \
- fi 
+	[ "${YOLO}" = "true" ] || [ "${YOLO}" = "TRUE" ]; then ;\
+	if [ "${NVIDIA_GPU}" = "true" ] || [ "${NVIDIA_GPU}" = "TRUE" ]; then \
+ 		echo "------------------------------------------" && \
+ 		echo "-- Installing CUDA Toolkit and CUDA DNN --" && \
+ 		echo "------------------------------------------" && \
+ 		wget https://cdn.shinobi.video/installers/cuda-repo-ubuntu1710_9.2.148-1_amd64.deb -O cuda.deb && \
+		wget https://developer.nvidia.com/compute/cuda/9.2/Prod2/local_installers/cuda-repo-ubuntu1710-9-2-local_9.2.148-1_amd64 -O cuda9.2.deb && \
+ 		apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1710/x86_64/7fa2af80.pub && \
+		apt-get -o Dpkg::Options::="--force-overwrite" install --fix-broken -y && \
+		dpkg --configure -a && \
+		dpkg -i cuda9.2.deb && \
+		dpkg -i cuda.deb && \
+		apt-get install -f && \
+		apt-get clean && \
+ 		apt-get update -y && \
+ 		apt-get -o Dpkg::Options::="--force-overwrite" install cuda -y && \
+ 		wget https://cdn.shinobi.video/installers/libcudnn7_7.2.1.38-1+cuda9.2_amd64.deb -O cuda-dnn.deb && \
+ 		dpkg -i cuda-dnn.deb && \
+ 		wget https://cdn.shinobi.video/installers/libcudnn7-dev_7.2.1.38-1+cuda9.2_amd64.deb -O cuda-dnn-dev.deb && \
+ 		dpkg -i cuda-dnn-dev.deb && \
+ 		echo "-- Cleaning Up --" && \
+ 		rm -f *.deb; \
+ 	fi ; \
+fi
 
 WORKDIR /opt/shinobi
 COPY pm2Shinobi-yolo.yml ./
