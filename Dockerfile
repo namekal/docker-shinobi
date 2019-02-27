@@ -11,19 +11,20 @@ ENV NVIDIA_GPU=false \
 	YOLO_PORT=8080 \
 	APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 \
 	PLUGINKEY_YOLO=574e44c1-dbff-3dc0-0f94-9d4a3dc0f194
-#    ADMIN_USER=admin@shinobi.video \
-#    ADMIN_PASSWORD=admin \
-#    CRON_KEY=fd6c7849-904d-47ea-922b-5143358ba0de \
-#    PLUGINKEY_MOTION=b7502fd9-506c-4dda-9b56-8e699a6bc41c \
-#    PLUGINKEY_OPENCV=f078bcfe-c39a-4eb5-bd52-9382ca828e8a \
-#    PLUGINKEY_OPENALPR=dbff574e-9d4a-44c1-b578-3dc0f1944a3c \
-#    #leave these ENVs alone unless you know what you are doing
-#    MYSQL_USER=majesticflame \
-#    MYSQL_PASSWORD=password \
-#    MYSQL_HOST=localhost \
-#    MYSQL_DATABASE=ccio \
-#    MYSQL_ROOT_PASSWORD=blubsblawoot \
-#    MYSQL_ROOT_USER=root
+
+#ADMIN_USER=admin@shinobi.video \
+#ADMIN_PASSWORD=admin \
+#CRON_KEY=fd6c7849-904d-47ea-922b-5143358ba0de \
+#PLUGINKEY_MOTION=b7502fd9-506c-4dda-9b56-8e699a6bc41c \
+#PLUGINKEY_OPENCV=f078bcfe-c39a-4eb5-bd52-9382ca828e8a \
+#PLUGINKEY_OPENALPR=dbff574e-9d4a-44c1-b578-3dc0f1944a3c \
+##leave these ENVs alone unless you know what you are doing
+#MYSQL_USER=majesticflame \
+#MYSQL_PASSWORD=password \
+#MYSQL_HOST=localhost \
+#MYSQL_DATABASE=ccio \
+#MYSQL_ROOT_PASSWORD=blubsblawoot \
+#MYSQL_ROOT_USER=root
 
 RUN \
  if [ "${OPENCV}" = "true" ] || [ "${OPENCV}" = "TRUE" ] || \
@@ -64,9 +65,9 @@ RUN \
 	 cmake -D CMAKE_INSTALL_PREFIX=/usr/local -D WITH_NVCUVID=ON -D FORCE_VTK=ON -D WITH_XINE=ON \
 		-D WITH_CUDA=ON -D WITH_OPENGL=ON -D WITH_TBB=ON -D WITH_OPENCL=ON -D CMAKE_BUILD_TYPE=RELEASE \
 		-D CUDA_NVCC_FLAGS="-D_FORCE_INLINES --expt-relaxed-constexpr" -D WITH_GDAL=ON \
-		-D OPENCV_EXTRA_MODULES_PATH=../opencv_contrib/modules/ \
+		-D OPENCV_EXTRA_MODULES_PATH=./opencv_contrib/modules/ \
 		-D ENABLE_FAST_MATH=1 -D CUDA_FAST_MATH=1 -D WITH_CUBLAS=1 -D CXXFLAGS="-std=c++11" \
-		-DCMAKE_CXX_COMPILER=g++-6 -DCMAKE_C_COMPILER=gcc-6 . && \
+		-DCMAKE_CXX_COMPILER=g++-6 -DCMAKE_C_COMPILER=gcc-6 ./opencv && \
 	make -j "$(nproc)" && \
 	make install && \
 	echo "/usr/local/lib" > /etc/ld.so.conf.d/opencv.conf && \
