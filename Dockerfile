@@ -31,20 +31,6 @@ RUN \
 	[ "${OPENALPR}" = "true" ] || [ "${OPENALPR}" = "TRUE" ] || \
 	[ "${YOLO_TINY}" = "true" ] || [ "${YOLO_TINY}" = "TRUE" ] || \
 	[ "${YOLO}" = "true" ] || [ "${YOLO}" = "TRUE" ]; then \
-	echo "Downloading OpenCV..." && \
-    cd /opencv && \
-    git clone https://github.com/opencv/opencv.git && \
-    cd opencv && \
-    git checkout 3.4.0 && \
-    cd .. && \
-    if [ ! -e "/opencv/opencv_contrib" ]; then \
-        echo "Downloading OpenCV Modules..." && \
-        cd /opencv && \
-        git clone https://github.com/opencv/opencv_contrib.git && \
-        cd opencv_contrib && \
-        git checkout 3.4.0 && \
-        cd .. ;\
-	fi; \
  	apt-get update && \
  	apt-get install -y \
  		libjpeg-dev libpango1.0-dev libgif-dev build-essential gcc-6 g++-6 \
@@ -61,12 +47,26 @@ RUN \
 	 	libtbb-dev libmp3lame-dev libopencore-amrnb-dev libopencore-amrwb-dev \
 	 	libtheora-dev libvorbis-dev libxvidcore-dev v4l-utils libleptonica-dev ; \
 	fi
-WORKDIR /
+
 RUN	\
  if [ "${OPENCV}" = "true" ] || [ "${OPENCV}" = "TRUE" ] || \
 	[ "${OPENALPR}" = "true" ] || [ "${OPENALPR}" = "TRUE" ] || \
 	[ "${YOLO_TINY}" = "true" ] || [ "${YOLO_TINY}" = "TRUE" ] || \
 	[ "${YOLO}" = "true" ] || [ "${YOLO}" = "TRUE" ]; then \
+	echo "Downloading OpenCV..." && \
+    cd /opencv && \
+    git clone https://github.com/opencv/opencv.git && \
+    cd opencv && \
+    git checkout 3.4.0 && \
+    cd .. && \
+    if [ ! -e "/opencv/opencv_contrib" ]; then \
+        echo "Downloading OpenCV Modules..." && \
+        cd /opencv && \
+        git clone https://github.com/opencv/opencv_contrib.git && \
+        cd opencv_contrib && \
+        git checkout 3.4.0 && \
+        cd .. ;\
+	fi; \
 	LD_LIBRARY_PATH=/usr/local/cuda/lib && \
 	PATH=$PATH:/usr/local/cuda/bin && \
 	cmake -D CMAKE_INSTALL_PREFIX=/usr/local -D WITH_NVCUVID=ON -D FORCE_VTK=ON -D WITH_XINE=ON \
