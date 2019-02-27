@@ -41,7 +41,7 @@ RUN \
         echo "Downloading OpenCV Modules..." && \
         cd /opencv && \
         git clone https://github.com/opencv/opencv_contrib.git && \
-        cd /opencv_contrib && \
+        cd opencv_contrib && \
         git checkout 3.4.0 && \
         cd .. ;\
 	fi; \
