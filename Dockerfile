@@ -94,12 +94,12 @@ RUN	\
  	wget https://cdn.shinobi.video/installers/cuda-repo-ubuntu1710_9.2.148-1_amd64.deb -O cuda.deb && \
  	apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1710/x86_64/7fa2af80.pub && \
  	dpkg -i cuda.deb && \
+	apt-get -o Dpkg::Options::="--force-overwrite" install --fix-broken -y && \
 	dpkg --configure -a && \
 	apt-get install -f && \
 	apt-get clean && \
  	apt-get update -y && \
  	apt-get -o Dpkg::Options::="--force-overwrite" install cuda -y && \
- 	apt-get -o Dpkg::Options::="--force-overwrite" install --fix-broken -y && \
  	wget https://cdn.shinobi.video/installers/libcudnn7_7.2.1.38-1+cuda9.2_amd64.deb -O cuda-dnn.deb && \
  	dpkg -i cuda-dnn.deb && \
  	wget https://cdn.shinobi.video/installers/libcudnn7-dev_7.2.1.38-1+cuda9.2_amd64.deb -O cuda-dnn-dev.deb && \
