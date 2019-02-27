@@ -44,7 +44,7 @@ RUN \
         cd /opencv_contrib && \
         git checkout 3.4.0 && \
         cd .. ;\
-	fi && \
+	fi; \
  	apt-get update && \
  	apt-get install -y \
  		libjpeg-dev libpango1.0-dev libgif-dev build-essential gcc-6 g++-6 \
@@ -107,7 +107,7 @@ RUN \
 		cp conf.sample.json conf.json ; \
 	if [ "${YOLO_TINY}" == "true" ] || [ "${YOLO_TINY}" == "TRUE" ]; then \
     	weightNameExtension="-tiny"; \
-    fi \
+    fi;\
     if [ ! -d "models" ]; then \
 		echo "Downloading yolov3 weights..." && \
    		mkdir models && \
@@ -123,7 +123,7 @@ RUN \
     	wget -O models/cfg/yolov3.cfg https://raw.githubusercontent.com/pjreddie/darknet/master/cfg/yolov3$weightNameExtension.cfg;\
 	else \
 		echo "yolov3 cfg found..."; \
-	fi && \
+	fi; \
 	echo "-----------------------------------"; \
 	if [ ! -d "models/data" ]; then \
 		echo "Downloading yolov3 data" && \
@@ -131,7 +131,7 @@ RUN \
 		wget -O models/data/coco.names https://raw.githubusercontent.com/pjreddie/darknet/master/data/coco.names; \
 	else \
 		echo "yolov3 data found..."; \
-	fi ; \
+	fi; \
 	# Set configuration for plugin ...
 	echo "Set configuration for plugin from environment variables ..." && \
 	sed -i -e 's/"host":"localhost"/"host":"'"${YOLO_HOST}"'"/g' \
