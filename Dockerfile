@@ -161,12 +161,13 @@ RUN \
 	npm install --unsafe-perm && \
 	npm install node-yolo-shinobi --unsafe-perm && \
 	npm install imagickal --unsafe-perm && \
-	npm audit fix --force && \
-	mv pm2Shinobi.yml pm2Shinobi.yml.bak && \
-	mv pm2Shinobi-yolo.yml pm2Shinobi.yml ;\
+	npm audit fix --force ;\
 fi
 
 WORKDIR /opt/shinobi
+RUN \
+ 	mv pm2Shinobi.yml pm2Shinobi.yml.bak && \
+	mv pm2Shinobi-yolo.yml pm2Shinobi.yml
 
 VOLUME ["/opt/shinobi/videos"]
 VOLUME ["/config"]
