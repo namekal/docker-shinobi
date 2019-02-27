@@ -61,7 +61,7 @@ RUN \
 	 	libtbb-dev libmp3lame-dev libopencore-amrnb-dev libopencore-amrwb-dev \
 	 	libtheora-dev libvorbis-dev libxvidcore-dev v4l-utils libleptonica-dev ; \
 	fi
-WORKDIR /opencv
+WORKDIR /
 RUN	\
  if [ "${OPENCV}" = "true" ] || [ "${OPENCV}" = "TRUE" ] || \
 	[ "${OPENALPR}" = "true" ] || [ "${OPENALPR}" = "TRUE" ] || \
