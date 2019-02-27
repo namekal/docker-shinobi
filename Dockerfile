@@ -29,7 +29,7 @@ ENV NVIDIA_GPU=false \
 RUN \
  if [ "${OPENCV}" = "true" ] || [ "${OPENCV}" = "TRUE" ] || \
 	[ "${OPENALPR}" = "true" ] || [ "${OPENALPR}" = "TRUE" ] || \
-	[ "${YOLO_TINY}"== "true" ] || [ "${YOLO_TINY}" = "TRUE" ] || \
+	[ "${YOLO_TINY}"= "true" ] || [ "${YOLO_TINY}" = "TRUE" ] || \
 	[ "${YOLO}" = "true" ] || [ "${YOLO}" = "TRUE" ]; then \
 	echo "Downloading OpenCV..." && \
     cd /opencv && \
