@@ -9,8 +9,6 @@ ENV NVIDIA_GPU=false \
 	YOLO_TINY=true \
 	YOLO_HOST=localhost \
 	YOLO_PORT=8080 \
-	LD_LIBRARY_PATH=/usr/local/cuda/lib \
-	PATH=$PATH:/usr/local/cuda/bin \
 	APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 \
 	PLUGINKEY_YOLO=574e44c1-dbff-3dc0-0f94-9d4a3dc0f194
 #    ADMIN_USER=admin@shinobi.video \
@@ -61,6 +59,8 @@ RUN \
 	 	libgstreamer-plugins-base1.0-dev libpng16-16 libpng-dev libv4l-dev \
 	 	libtbb-dev libmp3lame-dev libopencore-amrnb-dev libopencore-amrwb-dev \
 	 	libtheora-dev libvorbis-dev libxvidcore-dev v4l-utils libleptonica-dev && \
+	LD_LIBRARY_PATH=/usr/local/cuda/lib && \
+	PATH=$PATH:/usr/local/cuda/bin && \
 	 cmake -D CMAKE_INSTALL_PREFIX=/usr/local -D WITH_NVCUVID=ON -D FORCE_VTK=ON -D WITH_XINE=ON \
 		-D WITH_CUDA=ON -D WITH_OPENGL=ON -D WITH_TBB=ON -D WITH_OPENCL=ON -D CMAKE_BUILD_TYPE=RELEASE \
 		-D CUDA_NVCC_FLAGS="-D_FORCE_INLINES --expt-relaxed-constexpr" -D WITH_GDAL=ON \
