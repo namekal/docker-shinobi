@@ -27,10 +27,10 @@ ENV NVIDIA_GPU=false \
 #    MYSQL_ROOT_USER=root
 
 RUN \
- if [ "${OPENCV}" == "true" ] || [ "${OPENCV}" == "TRUE" ] || \
-	[ "${OPENALPR}" == "true" ] || [ "${OPENALPR}" == "TRUE" ] || \
-	[ "${YOLO_TINY}" == "true" ] || [ "${YOLO_TINY}" == "TRUE" ] || \
-	[ "${YOLO}" == "true" ] || [ "${YOLO}" == "TRUE" ]; then \
+ if [ "${OPENCV}" = "true" ] || [ "${OPENCV}" = "TRUE" ] || \
+	[ "${OPENALPR}" = "true" ] || [ "${OPENALPR}" = "TRUE" ] || \
+	[ "${YOLO_TINY}"== "true" ] || [ "${YOLO_TINY}" = "TRUE" ] || \
+	[ "${YOLO}" = "true" ] || [ "${YOLO}" = "TRUE" ]; then \
 	echo "Downloading OpenCV..." && \
     cd /opencv && \
     git clone https://github.com/opencv/opencv.git && \
@@ -76,8 +76,8 @@ RUN \
 
 # Install Cuda Toolkit
  RUN \
- if [ "${YOLO_TINY}" == "true" ] || [ "${YOLO_TINY}" == "TRUE" ] || \
-	[ "${YOLO}" == "true" ] || [ "${YOLO}" == "TRUE" ]; then \
+ if [ "${YOLO_TINY}" = "true" ] || [ "${YOLO_TINY}" = "TRUE" ] || \
+	[ "${YOLO}" = "true" ] || [ "${YOLO}" = "TRUE" ]; then \
  	echo "------------------------------------------" && \
  	echo "-- Installing CUDA Toolkit and CUDA DNN --" && \
  	echo "------------------------------------------" && \
@@ -101,11 +101,11 @@ COPY pm2Shinobi-yolo.yml ./
 ## Set up Yolo if Variable is set
 WORKDIR /opt/shinobi/plugins/yolo
 RUN \
- if [ "${YOLO_TINY}" == "true" ] || [ "${YOLO_TINY}" == "TRUE" ] || \
-	[ "${YOLO}" == "true" ] || [ "${YOLO}" == "TRUE" ]; then \
+ if [ "${YOLO_TINY}" = "true" ] || [ "${YOLO_TINY}" = "TRUE" ] || \
+	[ "${YOLO}" = "true" ] || [ "${YOLO}" = "TRUE" ]; then \
 		weightNameExtension="" && \
 		cp conf.sample.json conf.json ; \
-	if [ "${YOLO_TINY}" == "true" ] || [ "${YOLO_TINY}" == "TRUE" ]; then \
+	if [ "${YOLO_TINY}" = "true" ] || [ "${YOLO_TINY}" = "TRUE" ]; then \
     	weightNameExtension="-tiny"; \
     fi;\
     if [ ! -d "models" ]; then \
