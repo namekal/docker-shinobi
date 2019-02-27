@@ -53,7 +53,7 @@ RUN \
  		libatlas-base-dev gfortran \
  		&& \
  	apt install -y \
-	 	install build-essential cmake pkg-config unzip ffmpeg qtbase5-dev \
+	 	build-essential cmake pkg-config unzip ffmpeg qtbase5-dev \
 	 	python-dev python3-dev python-numpy python3-numpy libhdf5-dev \
 	 	libgtk-3-dev libdc1394-22 libdc1394-22-dev libjpeg-dev libtiff5-dev \
 	 	libtesseract-dev libavcodec-dev libavformat-dev libswscale-dev \
