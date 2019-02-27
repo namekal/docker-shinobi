@@ -93,8 +93,8 @@ RUN	\
  	echo "------------------------------------------" && \
  	wget https://cdn.shinobi.video/installers/cuda-repo-ubuntu1710_9.2.148-1_amd64.deb -O cuda.deb && \
  	apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1710/x86_64/7fa2af80.pub && \
-	apt-get install cuda-9-2 && \
 	apt-get -o Dpkg::Options::="--force-overwrite" install --fix-broken -y && \
+	apt-get install cuda-9-0 && \
  	dpkg -i cuda.deb && \
 	dpkg --configure -a && \
 	apt-get install -f && \
