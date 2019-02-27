@@ -156,7 +156,7 @@ RUN \
            -e 's/"key":"d4b5feb4-8f9c-4b91-bfec-277c641fc5e3"/"key":"'"${PLUGINKEY_YOLO}"'"/g' \
            "/opt/shinobi/plugins/yolo/conf.json" && \
     sed -i -e 's/"Motion":"d4b5feb4-8f9c-4b91-bfec-277c641fc5e3"/"Yolo":"'"${PLUGINKEY_YOLO}"'"/g' \
-    		"/opt/shinobi/conf.json" && \
+    		"/opt/shinobi/conf.sample.json" && \
 	npm install node-gyp -g --unsafe-perm && \
 	npm install --unsafe-perm && \
 	npm install node-yolo-shinobi --unsafe-perm && \
