@@ -80,6 +80,7 @@ RUN	\
 	echo "/usr/local/lib" > /etc/ld.so.conf.d/opencv.conf && \
 	ldconfig && \
 	apt-get update && \
+	cd / && \
 	rm -rf /opencv ; \
  fi
 
