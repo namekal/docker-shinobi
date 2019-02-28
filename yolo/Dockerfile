@@ -2,7 +2,7 @@ FROM migoller/shinobidocker:debian
 
 VOLUME /opencv
 
-ENV NVIDIA_GPU=false \
+ENV NVIDIA_GPU=true \
 	OPENCV=false \
 	OPENALPR=false \
 	YOLO=true \
