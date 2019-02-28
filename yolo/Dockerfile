@@ -5,7 +5,7 @@ VOLUME /opencv
 ENV NVIDIA_GPU=false \
 	OPENCV=false \
 	OPENALPR=false \
-	YOLO=false \
+	YOLO=true \
 	YOLO_TINY=false \
 	YOLO_HOST=localhost \
 	YOLO_PORT=8080 \
