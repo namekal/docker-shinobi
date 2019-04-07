@@ -31,6 +31,11 @@ if [ ! -f /opt/shinobi/plugins/motion/conf.json ]; then
     cp /opt/shinobi/plugins/motion/conf.sample.json /opt/shinobi/plugins/motion/conf.json
 fi
 
+if [ ! -f /opt/shinobi/plugins/yolo/conf.json ]; then
+    echo "Create default config file /opt/shinobi/plugins/yolo/conf.json ..."
+    cp /opt/shinobi/plugins/yolo/conf.sample.json /opt/shinobi/plugins/yolo/conf.json
+fi
+
 ## Hash the admins password
 #if [ -n "${ADMIN_PASSWORD}" ]; then
 #    echo "Hash admin password ..."
@@ -137,6 +142,16 @@ sed -i -e 's/"key":"73ffd716-16ab-40f4-8c2e-aecbd3bc1d30"/"key":"'"${CRON_KEY}"'
        -e 's/"OpenCV":"644bb8aa-8066-44b6-955a-073e6a745c74"/"OpenCV":"'"${PLUGINKEY_OPENCV}"'"/g' \
        -e 's/"OpenALPR":"9973e390-f6cd-44a4-86d7-954df863cea0"/"OpenALPR":"'"${PLUGINKEY_OPENALPR}"'"/g' \
        "/opt/shinobi/conf.json"
+if [ "${YOLO_TINY}" = "true" ] || [ "${YOLO_TINY}" = "TRUE" ] || \
+    [ "${YOLO}" = "true" ] || [ "${YOLO}" = "TRUE" ]; then
+    sed -i -e 's/"OpenCV":"644bb8aa-8066-44b6-955a-073e6a745c74"/"Yolo":"'"${PLUGINKEY_YOLO}"'"/g' \
+           "/opt/shinobi/conf.json" && \
+    sed -i -e 's/"host":"localhost"/"host":"'"${YOLO_HOST}"'"/g' \
+           -e 's/"port":8080/"port":"'"${YOLO_PORT}"'"/g' \
+           -e 's/"key":"Yolo123123"/"key":"'"${PLUGINKEY_YOLO}"'"/g' \
+           "/opt/shinobi/plugins/yolo/conf.json"
+
+fi
 
 # Set configuration for motion plugin ...
 echo "Set configuration for motion plugin from environment variables ..."

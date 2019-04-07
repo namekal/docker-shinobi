@@ -150,13 +150,13 @@ RUN \
 		echo "yolov3 data found..."; \
 	fi; \
 	# Set configuration for plugin ...
-	echo "Set configuration for plugin from environment variables ..." && \
-	sed -i -e 's/"host":"localhost"/"host":"'"${YOLO_HOST}"'"/g' \
-		   -e 's/"port":8080/"port":"'"${YOLO_PORT}"'"/g' \
-           -e 's/"key":"d4b5feb4-8f9c-4b91-bfec-277c641fc5e3"/"key":"'"${PLUGINKEY_YOLO}"'"/g' \
-           "/opt/shinobi/plugins/yolo/conf.json" && \
-    sed -i -e 's/"Motion":"d4b5feb4-8f9c-4b91-bfec-277c641fc5e3"/"Yolo":"'"${PLUGINKEY_YOLO}"'"/g' \
-    		"/opt/shinobi/conf.sample.json" && \
+##	echo "Set configuration for plugin from environment variables ..." && \
+##	sed -i -e 's/"host":"localhost"/"host":"'"${YOLO_HOST}"'"/g' \
+##		   -e 's/"port":8080/"port":"'"${YOLO_PORT}"'"/g' \
+##           -e 's/"key":"Yolo123123"/"key":"'"${PLUGINKEY_YOLO}"'"/g' \
+##           "/opt/shinobi/plugins/yolo/conf.json" && \
+##    sed -i -e 's/"Motion":"d4b5feb4-8f9c-4b91-bfec-277c641fc5e3"/"Yolo":"'"${PLUGINKEY_YOLO}"'"/g' \
+##    		"/opt/shinobi/conf.sample.json" && \
 	npm install node-gyp -g --unsafe-perm && \
 	npm install --unsafe-perm && \
 	npm install node-yolo-shinobi --unsafe-perm && \
@@ -166,8 +166,12 @@ fi
 
 WORKDIR /opt/shinobi
 RUN \
- 	mv pm2Shinobi.yml pm2Shinobi.yml.bak && \
-	mv pm2Shinobi-yolo.yml pm2Shinobi.yml
+	mv pm2Shinobi.yml pm2Shinobi.yml.bak && \
+	if [ "${PLUGINONLY}" = "true" ] || [ "${PLUGINONLY}" = "TRUE" ]; then \
+	mv pm2Shinobi-yolo-only.yml pm2Shinobi.yml ;\
+	else \
+	mv pm2Shinobi-yolo.yml pm2Shinobi.yml ;\
+	fi
 
 VOLUME ["/opt/shinobi/videos"]
 VOLUME ["/config"]

@@ -1,2 +1,31 @@
 ### Shinobi CCTV Docker Image
 test 4
+Environment Variables:
+
+NVIDIA_GPU=false
+OPENCV=false
+OPENALPR=false
+YOLO=false
+YOLO_TINY=true
+YOLO_HOST=localhost
+YOLO_PORT="8080"
+APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1
+PLUGINKEY_YOLO=574e44c1-dbff-3dc0-0f94-9d4a3dc0f194
+APP_UPDATE
+EMBEDDEDDB
+ADMIN_USER=admin@shinobi.video
+ADMIN_PASSWORD=admin
+CRON_KEY=fd6c7849-904d-47ea-922b-5143358ba0de
+PLUGINKEY_MOTION=b7502fd9-506c-4dda-9b56-8e699a6bc41c
+PLUGINKEY_OPENCV=f078bcfe-c39a-4eb5-bd52-9382ca828e8a
+PLUGINKEY_OPENALPR=dbff574e-9d4a-44c1-b578-3dc0f1944a3c
+
+#leave these ENVs alone unless you know what you are doing
+MYSQL_USER=majesticflame
+MYSQL_PASSWORD=password
+MYSQL_HOST=localhost
+MYSQL_DATABASE=ccio
+MYSQL_ROOT_PASSWORD=blubsblawoot
+MYSQL_ROOT_USER=root
+
+PLUGINONLY
