@@ -166,8 +166,12 @@ fi
 
 WORKDIR /opt/shinobi
 RUN \
- 	mv pm2Shinobi.yml pm2Shinobi.yml.bak && \
-	mv pm2Shinobi-yolo.yml pm2Shinobi.yml
+	mv pm2Shinobi.yml pm2Shinobi.yml.bak && \
+	if [ "${PLUGINONLY}" = "true" ] || [ "${PLUGINONLY}" = "TRUE" ]; then \
+	mv pm2Shinobi-yolo-only.yml pm2Shinobi.yml ;\
+	else \
+	mv pm2Shinobi-yolo.yml pm2Shinobi.yml ;\
+	fi
 
 VOLUME ["/opt/shinobi/videos"]
 VOLUME ["/config"]
