@@ -17,7 +17,6 @@ ARG ARG_APP_UPDATE=manual
 # Build data
 ARG ARG_BUILD_DATE
 
-
 # Basic build-time metadata as defined at http://label-schema.org
 LABEL org.label-schema.build-date=${ARG_BUILD_DATE} \
     org.label-schema.docker.dockerfile="/Dockerfile" \
@@ -78,7 +77,7 @@ RUN mkdir -p \
 
 WORKDIR /opt/shinobi
 
-RUN echo "deb http://archive.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
+#RUN echo "deb http://archive.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
 
 # Install package dependencies
 RUN apt-get update && \
@@ -249,9 +248,6 @@ RUN	\
  	fi ; \
 fi
 
-WORKDIR /opt/shinobi
-COPY pm2Shinobi-yolo.yml pm2Shinobi-yolo-only.yml docker-entrypoint.sh ./
-RUN chmod -f +x ./*.sh
 
 ## Set up Yolo if Variable is set
 WORKDIR /opt/shinobi/plugins/yolo
@@ -301,13 +297,20 @@ RUN \
 	npm install imagickal --unsafe-perm && \
 	npm audit fix --force ;\
 fi
-
 WORKDIR /opt/shinobi
+
+COPY pm2Shinobi.yml pm2Shinobi-yolo.yml pm2Shinobi-yolo-only.yml docker-entrypoint.sh /opt/shinobi/
+RUN chmod -f +x ./*.sh
+
+ARG PLUGINONLY
+ENV PLUGINONLY=$PLUGINONLY
+
 RUN \
-	mv pm2Shinobi.yml pm2Shinobi.yml.bak && \
 	if [ "${PLUGINONLY}" = "true" ] || [ "${PLUGINONLY}" = "TRUE" ]; then \
+	mv pm2Shinobi.yml pm2Shinobi.yml.bak && \
 	mv pm2Shinobi-yolo-only.yml pm2Shinobi.yml ;\
 	else \
+	mv pm2Shinobi.yml pm2Shinobi.yml.bak && \
 	mv pm2Shinobi-yolo.yml pm2Shinobi.yml ;\
 	fi
 
@@ -320,6 +323,7 @@ VOLUME ["/var/lib/mysql"]
 VOLUME ["/opt/dbdata"]
 
 EXPOSE 8080
+EXPOSE 8082
 
 ENTRYPOINT ["/opt/shinobi/docker-entrypoint.sh"]
 
