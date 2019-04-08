@@ -123,6 +123,7 @@ RUN apt-get install -y \
         xz-utils
 
 
+
 # Clone the Shinobi CCTV PRO repo and install Shinobi app including NodeJS dependencies
 RUN git clone https://gitlab.com/Shinobi-Systems/Shinobi.git /opt/shinobi && \
     npm i npm@latest -g && \
@@ -297,6 +298,8 @@ RUN \
 	npm install imagickal --unsafe-perm && \
 	npm audit fix --force ;\
 fi
+
+
 WORKDIR /opt/shinobi
 
 COPY pm2Shinobi.yml pm2Shinobi-yolo.yml pm2Shinobi-yolo-only.yml docker-entrypoint.sh /opt/shinobi/
@@ -313,6 +316,28 @@ RUN \
 	mv pm2Shinobi.yml pm2Shinobi.yml.bak && \
 	mv pm2Shinobi-yolo.yml pm2Shinobi.yml ;\
 	fi
+	
+# Install MariaDB server... the debian way
+RUN if [ "${PLUGINONLY}" != "true" ] && [ "${PLUGINONLY}" != "TRUE" ]; then \
+	set -ex; \
+	{ \
+		echo "mariadb-server" mysql-server/root_password password '${MYSQL_ROOT_PASSWORD}'; \
+		echo "mariadb-server" mysql-server/root_password_again password '${MYSQL_ROOT_PASSWORD}'; \
+	} | debconf-set-selections; \
+	apt-get update; \
+	apt-get install -y \
+		"mariadb-server" \
+        socat \
+	; \
+    find /etc/mysql/ -name '*.cnf' -print0 \
+		| xargs -0 grep -lZE '^(bind-address|log)' \
+		| xargs -rt -0 sed -Ei 's/^(bind-address|log)/#&/'
+    fi
+
+RUN if [ "${PLUGINONLY}" != "true" ] && [ "${PLUGINONLY}" != "TRUE" ]; then \
+	sed -ie "s/^bind-address\s*=\s*127\.0\.0\.1$/#bind-address = 0.0.0.0/" /etc/mysql/my.cnf
+    fi
+
 
 # Copy default configuration files
 COPY ./config/conf.sample.json ./config/super.sample.json /opt/shinobi/
