@@ -88,5 +88,6 @@ if [ -n "${GID}" ]; then
 fi
 
 # Execute Command
+cd /opt/shinobi
 echo "Starting Yolo Plugin for Shinobi ..."
 exec "$@"
