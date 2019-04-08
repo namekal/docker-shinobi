@@ -44,7 +44,7 @@ ENV APP_VERSION=$ARG_APP_VERSION \
 VOLUME ["/opencv"]
 
 # Set environment variables to default values
-ENV 	PLUGINKEY_YOLO=Yolo123123 \
+ENV	PLUGINKEY_YOLO=Yolo123123 \
 	YOLO_TINY=false \
 	YOLO_HOST=localhost \
 	YOLO_PORT="8080" \
@@ -68,7 +68,7 @@ WORKDIR /opt/shinobi
 # Install package dependencies
 RUN \
 	apt-get update && \
-    	apt-get install -y \
+	apt-get install -y \
 	        libfreetype6-dev \
 	        libgnutls28-dev \
 	        libmp3lame-dev \
@@ -85,19 +85,19 @@ RUN \
 	        libx265-dev \
 	        yasm && \
 	apt-get install -y \
-        	build-essential \
-        	bzip2 \
-        	coreutils \
-        	gnutls-bin \
-        	nasm \
-        	tar \
-        	x264
+		build-essential \
+		bzip2 \
+		coreutils \
+		gnutls-bin \
+		nasm \
+		tar \
+		x264
 
 # Install additional packages
 
 RUN \
 	apt-get install -y \
-        	ffmpeg \
+		ffmpeg \
 	        git \
 	        libsqlite3-dev \
 	        make \
@@ -122,61 +122,61 @@ RUN \
 
 
 RUN \
-  	apt-get install -y \
- 		libjpeg-dev \
- 		libpango1.0-dev \
- 		libgif-dev \
- 		gcc-6 \
- 		g++-6 \
- 		libxvidcore-dev \
- 		libatlas-base-dev \
- 		gfortran
- 	
+	apt-get install -y \
+		libjpeg-dev \
+		libpango1.0-dev \
+		libgif-dev \
+		gcc-6 \
+		g++-6 \
+		libxvidcore-dev \
+		libatlas-base-dev \
+		gfortran
 
 RUN \
- 	apt install -y \
-	 	cmake \
-	 	unzip \
-	 	qtbase5-dev \
-	 	python-dev \
-	 	python3-dev \
-	 	python-numpy \
-	 	python3-numpy \
-	 	libhdf5-dev \
-	 	libgtk-3-dev \
-	 	libdc1394-22 \
-	 	libdc1394-22-dev \
-	 	libtiff5-dev \
-	 	libtesseract-dev \
-	 	libavcodec-dev \
-	 	libavformat-dev \
-	 	libswscale-dev \
-	 	libxine2-dev \
-	 	libgstreamer-plugins-base1.0-0 \
-	 	libgstreamer-plugins-base1.0-dev \
-	 	libpng16-16 \
-	 	libpng-dev \
-	 	libv4l-dev \
-	 	libtbb-dev \
-	 	libopencore-amrnb-dev \
-	 	libopencore-amrwb-dev \
-	 	v4l-utils \
-	 	libleptonica-dev
+	apt install -y \
+		cmake \
+		unzip \
+		qtbase5-dev \
+		python-dev \
+		python3-dev \
+		python-numpy \
+		python3-numpy \
+		libhdf5-dev \
+		libgtk-3-dev \
+		libdc1394-22 \
+		libdc1394-22-dev \
+		libtiff5-dev \
+		libtesseract-dev \
+		libavcodec-dev \
+		libavformat-dev \
+		libswscale-dev \
+		libxine2-dev \
+		libgstreamer-plugins-base1.0-0 \
+		libgstreamer-plugins-base1.0-dev \
+		libpng16-16 \
+		libpng-dev \
+		libv4l-dev \
+		libtbb-dev \
+		libopencore-amrnb-dev \
+		libopencore-amrwb-dev \
+		v4l-utils \
+		nano \
+		libleptonica-dev
 	
 
 RUN	\
 	echo "Downloading OpenCV..." && \
-    	cd /opencv && \
-    	git clone https://github.com/opencv/opencv.git && \
-    	cd opencv && \
-    	git checkout 3.4.0 && \
-    	cd .. && \
-    	if [ ! -e "/opencv/opencv_contrib" ]; then \
+	cd /opencv && \
+	git clone https://github.com/opencv/opencv.git && \
+	cd opencv && \
+	git checkout 3.4.0 && \
+	cd .. && \
+	if [ ! -e "/opencv/opencv_contrib" ]; then \
 	        echo "Downloading OpenCV Modules..." && \
 	        cd /opencv && \
-        	git clone https://github.com/opencv/opencv_contrib.git && \
-        	cd opencv_contrib && \
-        	git checkout 3.4.0 && \
+		git clone https://github.com/opencv/opencv_contrib.git && \
+		cd opencv_contrib && \
+		git checkout 3.4.0 && \
 	        cd .. ;\
 	fi; \
 	LD_LIBRARY_PATH=/usr/local/cuda/lib && \
@@ -197,28 +197,26 @@ RUN	\
 
 #Install Cuda Toolkit
  RUN \
-	if [ "${NVIDIA_GPU}" = "true" ] || [ "${NVIDIA_GPU}" = "TRUE" ]; then \
- 		echo "------------------------------------------" && \
- 		echo "-- Installing CUDA Toolkit and CUDA DNN --" && \
- 		echo "------------------------------------------" && \
- 		wget https://cdn.shinobi.video/installers/cuda-repo-ubuntu1710_9.2.148-1_amd64.deb -O cuda.deb && \
-		wget https://developer.nvidia.com/compute/cuda/9.2/Prod2/local_installers/cuda-repo-ubuntu1710-9-2-local_9.2.148-1_amd64 -O cuda9.2.deb && \
- 		apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1710/x86_64/7fa2af80.pub && \
-		apt-get -o Dpkg::Options::="--force-overwrite" install --fix-broken -y && \
-		dpkg --configure -a && \
-		dpkg -i cuda9.2.deb && \
-		dpkg -i cuda.deb && \
-		apt-get install -f && \
-		apt-get clean && \
- 		apt-get update -y && \
- 		apt-get -o Dpkg::Options::="--force-overwrite" install cuda -y && \
- 		wget https://cdn.shinobi.video/installers/libcudnn7_7.2.1.38-1+cuda9.2_amd64.deb -O cuda-dnn.deb && \
- 		dpkg -i cuda-dnn.deb && \
- 		wget https://cdn.shinobi.video/installers/libcudnn7-dev_7.2.1.38-1+cuda9.2_amd64.deb -O cuda-dnn-dev.deb && \
- 		dpkg -i cuda-dnn-dev.deb && \
- 		echo "-- Cleaning Up --" && \
- 		rm -f *.deb; \
- 	fi
+	echo "------------------------------------------" && \
+	echo "-- Installing CUDA Toolkit and CUDA DNN --" && \
+	echo "------------------------------------------" && \
+	wget https://cdn.shinobi.video/installers/cuda-repo-ubuntu1710_9.2.148-1_amd64.deb -O cuda.deb && \
+	wget https://developer.nvidia.com/compute/cuda/9.2/Prod2/local_installers/cuda-repo-ubuntu1710-9-2-local_9.2.148-1_amd64 -O cuda9.2.deb && \
+	apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1710/x86_64/7fa2af80.pub && \
+	apt-get -o Dpkg::Options::="--force-overwrite" install --fix-broken -y && \
+	dpkg --configure -a && \
+	dpkg -i cuda9.2.deb && \
+	dpkg -i cuda.deb && \
+	apt-get install -f && \
+	apt-get clean && \
+	apt-get update -y && \
+	apt-get -o Dpkg::Options::="--force-overwrite" install cuda -y && \
+	wget https://cdn.shinobi.video/installers/libcudnn7_7.2.1.38-1+cuda9.2_amd64.deb -O cuda-dnn.deb && \
+	dpkg -i cuda-dnn.deb && \
+	wget https://cdn.shinobi.video/installers/libcudnn7-dev_7.2.1.38-1+cuda9.2_amd64.deb -O cuda-dnn-dev.deb && \
+	dpkg -i cuda-dnn-dev.deb && \
+	echo "-- Cleaning Up --" && \
+	rm -f *.deb
 
 
 ## Set up Yolo if Variable is set
@@ -227,21 +225,21 @@ RUN \
 	weightNameExtension="" && \
 	cp conf.sample.json conf.json ; \
 	if [ "${YOLO_TINY}" = "true" ] || [ "${YOLO_TINY}" = "TRUE" ]; then \
-    		weightNameExtension="-tiny"; \
-    	fi;\
-    	if [ ! -d "models" ]; then \
+		weightNameExtension="-tiny"; \
+	fi;\
+	if [ ! -d "models" ]; then \
 		echo "Downloading yolov3 weights..." && \
-   		mkdir models && \
-    		wget -O models/yolov3.weights https://pjreddie.com/media/files/yolov3$weightNameExtension.weights; \
+		mkdir models && \
+		wget -O models/yolov3.weights https://pjreddie.com/media/files/yolov3$weightNameExtension.weights; \
 	else \
-    		echo "yolov3 weights found..."; \
+		echo "yolov3 weights found..."; \
 	fi; \
 	echo "-----------------------------------"; \
 	if [ ! -d "models/cfg" ]; then \
-    		echo "Downloading yolov3 cfg" && \
-    		mkdir models/cfg && \
-    		wget -O models/cfg/coco.data https://raw.githubusercontent.com/pjreddie/darknet/master/cfg/coco.data && \
-    		wget -O models/cfg/yolov3.cfg https://raw.githubusercontent.com/pjreddie/darknet/master/cfg/yolov3$weightNameExtension.cfg;\
+		echo "Downloading yolov3 cfg" && \
+		mkdir models/cfg && \
+		wget -O models/cfg/coco.data https://raw.githubusercontent.com/pjreddie/darknet/master/cfg/coco.data && \
+		wget -O models/cfg/yolov3.cfg https://raw.githubusercontent.com/pjreddie/darknet/master/cfg/yolov3$weightNameExtension.cfg;\
 	else \
 		echo "yolov3 cfg found..."; \
 	fi; \
@@ -260,7 +258,7 @@ RUN \
 ##           -e 's/"key":"Yolo123123"/"key":"'"${PLUGINKEY_YOLO}"'"/g' \
 ##           "/opt/shinobi/plugins/yolo/conf.json" && \
 ##    sed -i -e 's/"Motion":"d4b5feb4-8f9c-4b91-bfec-277c641fc5e3"/"Yolo":"'"${PLUGINKEY_YOLO}"'"/g' \
-##    		"/opt/shinobi/conf.sample.json" && \
+##		"/opt/shinobi/conf.sample.json" && \
 	npm install node-gyp -g --unsafe-perm && \
 	npm install --unsafe-perm && \
 	npm install node-yolo-shinobi --unsafe-perm && \
