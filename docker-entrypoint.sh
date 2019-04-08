@@ -15,18 +15,25 @@ if [ -d /config ]; then
     cp -R -f "/config/"* /opt/shinobi || echo "No custom config files found." 
 fi
 
-if [ ! -f /opt/shinobi/plugins/yolo/conf.json ]; then
-    echo "Create default config file /opt/shinobi/plugins/yolo/conf.json ..."
-    cp /opt/shinobi/plugins/yolo/conf.sample.json /opt/shinobi/plugins/yolo/conf.json
-fi
+	if [ ! -f /opt/shinobi/plugins/yolo/${YOLO_MODE} ] ; then
+    	echo "Create default config file /opt/shinobi/plugins/yolo/conf.json ..."
+    	cp /opt/shinobi/yolo.${YOLO_MODE}.sample.json /opt/shinobi/plugins/yolo/conf.json &&\
+	touch /opt/shinobi/plugins/yolo/${YOLO_MODE}
+	fi
+
+
 
 # Set keys for PLUGIN ...
 echo "- Set keys for PLUGIN from environment variables ..."
-sed -i -e 's/"host":"localhost"/"host":"'"${YOLO_HOST}"'"/g' \
-       -e 's/"port":8080/"port":"'"${YOLO_PORT}"'"/g' \
-       -e 's/"key":"Yolo123123"/"key":"'"${PLUGINKEY_YOLO}"'"/g' \
-       "/opt/shinobi/plugins/yolo/conf.json"
-
+if [ "${YOLO_MODE}" = "host" ]; then \	
+	sed -i 	-e 's/"hostPort":8082/"hostPort":"'"${YOLO_PORT}"'"/g' \
+	       	-e 's/"key":"Yolo123123"/"key":"'"${PLUGINKEY_YOLO}"'"/g' \
+       		"/opt/shinobi/plugins/yolo/conf.json" ;\
+else \
+	sed -i -e 's/"host":"localhost"/"host":"'"${YOLO_HOST}"'"/g' \
+       	       -e 's/"port":8080/"port":"'"${YOLO_PORT}"'"/g' \
+	       -e 's/"key":"Yolo123123"/"key":"'"${PLUGINKEY_YOLO}"'"/g' \
+	       "/opt/shinobi/plugins/yolo/conf.json"
 fi
 
 
