@@ -63,6 +63,7 @@ RUN \
 WORKDIR /opt/shinobi
 
 #RUN echo "deb http://archive.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
+#RUN export DEBIAN_FRONTEND="noninteractive"
 
 # Install package dependencies
 RUN \
@@ -267,7 +268,7 @@ RUN \
 	npm audit fix --force
 
 WORKDIR /opt/shinobi
-
+COPY config/* /opt/shinobi/
 COPY pm2yolo.yml docker-entrypoint.sh /opt/shinobi/
 RUN chmod -f +x ./*.sh
 
