@@ -1,0 +1,7 @@
+{
+  "plug":"Yolo",
+  "hostPort":8082,
+  "key":"Yolo123123",
+  "mode":"host",
+  "type":"detector"
+}
