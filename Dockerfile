@@ -63,6 +63,7 @@ RUN \
 WORKDIR /opt/shinobi
 
 #RUN echo "deb http://archive.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
+RUN export DEBIAN_FRONTEND="noninteractive"
 
 # Install package dependencies
 RUN \
