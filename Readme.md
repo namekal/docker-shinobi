@@ -8,3 +8,20 @@
 | YOLO_HOST | {ip} / **localhost** |
 | YOLO_PORT | {Port #} / **8080** |
 | NVIDIA_GPU | true / **false** |
+
+
+
+#Docker run command:
+```
+docker run \
+  -d \
+  --name yolo \
+  --net=host \
+  -e PLUGINKEY_YOLO=Yolo123123 \
+  -e YOLO_TINY=false \
+  -e YOLO_MODE=client \
+  -e YOLO_HOST=localhost \
+  -e YOLO_PORT=8080 \
+  -v </custom/configs>:/config \
+  namekal/shinobi-docker:yolo-plugin
+```
