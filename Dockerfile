@@ -17,6 +17,8 @@ ARG ARG_APP_UPDATE=manual
 # Build data
 ARG ARG_BUILD_DATE
 
+ARG GIT_BRANCH="master"
+
 # Basic build-time metadata as defined at http://label-schema.org
 LABEL org.label-schema.build-date=${ARG_BUILD_DATE} \
     org.label-schema.docker.dockerfile="/Dockerfile" \
@@ -32,113 +34,91 @@ LABEL org.label-schema.build-date=${ARG_BUILD_DATE} \
     maintainer="MiGoller" \
     Author="MiGoller, mrproper, pschmitt & moeiscool"
 
-# Persist app-reladted build arguments
+# Persist app-related build arguments
 ENV APP_VERSION=$ARG_APP_VERSION \
     APP_CHANNEL=$ARG_APP_CHANNEL \
     APP_COMMIT=$ARG_APP_COMMIT \
-    APP_UPDATE=$ARG_APP_UPDATE
+    APP_UPDATE=$ARG_APP_UPDATE \
+    GIT_BRANCH=$GIT_BRANCH
 
 VOLUME ["/opencv"]
 
 # Set environment variables to default values
-# ADMIN_USER : the super user login name
-# ADMIN_PASSWORD : the super user login password
-# PLUGINKEY_MOTION : motion plugin connection key
-# PLUGINKEY_OPENCV : opencv plugin connection key
-# PLUGINKEY_OPENALPR : openalpr plugin connection key
-ENV ADMIN_USER=admin@shinobi.video \
-	ADMIN_PASSWORD=admin \
-	CRON_KEY=fd6c7849-904d-47ea-922b-5143358ba0de \
-	PLUGINKEY_MOTION=b7502fd9-506c-4dda-9b56-8e699a6bc41c \
-	PLUGINKEY_OPENCV=f078bcfe-c39a-4eb5-bd52-9382ca828e8a \
-	PLUGINKEY_OPENALPR=dbff574e-9d4a-44c1-b578-3dc0f1944a3c \
-	PLUGINKEY_YOLO=Yolo123123 \
-	#leave these ENVs alone unless you know what you are doing
-	MYSQL_USER=majesticflame \
-	MYSQL_PASSWORD=password \
-	MYSQL_HOST=localhost \
-	MYSQL_DATABASE=ccio \
-	MYSQL_ROOT_PASSWORD=blubsblawoot \
-	MYSQL_ROOT_USER=root \
-	NVIDIA_GPU=false \
-	OPENCV=false \
-	OPENALPR=false \
-	YOLO=false \
+ENV 	PLUGINKEY_YOLO=Yolo123123 \
 	YOLO_TINY=true \
+	NVIDIA_GPU=false \
 	YOLO_HOST=localhost \
 	YOLO_PORT="8080" \
+	#leave these ENVs alone unless you know what you are doing
 	APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1
 
-RUN mkdir -p \
+RUN \
+	mkdir -p \
         /config \
-        /opt/shinobi \
-        /var/lib/mysql \
-        /opt/dbdata
+        /opt/shinobi 
 
 WORKDIR /opt/shinobi
 
 #RUN echo "deb http://archive.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
 
 # Install package dependencies
-RUN apt-get update && \
-    apt-get install -y \
-        libfreetype6-dev \
-        libgnutls28-dev \
-        libmp3lame-dev \
-        libass-dev \
-        libogg-dev \
-        libtheora-dev \
-        libvorbis-dev \
-        libvpx-dev \
-        libwebp-dev \
-        libssh2-1-dev \
-        libopus-dev \
-        librtmp-dev \
-        libx264-dev \
-        libx265-dev \
-        yasm && \
-    apt-get install -y \
-        build-essential \
-        bzip2 \
-        coreutils \
-        gnutls-bin \
-        nasm \
-        tar \
-        x264
+RUN \
+	apt-get update && \
+    	apt-get install -y \
+	        libfreetype6-dev \
+	        libgnutls28-dev \
+	        libmp3lame-dev \
+	        libass-dev \
+	        libogg-dev \
+	        libtheora-dev \
+	        libvorbis-dev \
+	        libvpx-dev \
+	        libwebp-dev \
+	        libssh2-1-dev \
+	        libopus-dev \
+	        librtmp-dev \
+	        libx264-dev \
+	        libx265-dev \
+	        yasm && \
+	apt-get install -y \
+        	build-essential \
+        	bzip2 \
+        	coreutils \
+        	gnutls-bin \
+        	nasm \
+        	tar \
+        	x264
 
 # Install additional packages
 
-RUN apt-get install -y \
-        ffmpeg \
-        git \
-        libsqlite3-dev \
-        make \
-        mariadb-client \
-        openrc \
-        pkg-config \
-        python \
-        socat \
-        sqlite \
-        wget \
-        xz-utils
+RUN \
+	apt-get install -y \
+        	ffmpeg \
+	        git \
+	        libsqlite3-dev \
+	        make \
+	        mariadb-client \
+	        openrc \
+	        pkg-config \
+	        python \
+	        socat \
+	        sqlite \
+	        wget \
+	        xz-utils
 
 
 # Clone the Shinobi CCTV PRO repo and install Shinobi app including NodeJS dependencies
-RUN git clone https://gitlab.com/Shinobi-Systems/Shinobi.git /opt/shinobi && \
-    npm i npm@latest -g && \
-    npm install pm2 -g && \
-    npm install jsonfile && \
-    npm install sqlite3 && \
-    npm install --unsafe-perm && \
-    npm audit fix --force
+RUN \
+	git clone https://gitlab.com/Shinobi-Systems/Shinobi.git /opt/shinobi && \
+	npm i npm@latest -g && \
+	npm install pm2 -g && \
+	npm install jsonfile && \
+	npm install --unsafe-perm && \
+	npm audit fix --force
 
 
 RUN \
- if [ "${OPENCV}" = "true" ] || [ "${OPENCV}" = "TRUE" ] || \
-	[ "${OPENALPR}" = "true" ] || [ "${OPENALPR}" = "TRUE" ] || \
-	[ "${YOLO_TINY}" = "true" ] || [ "${YOLO_TINY}" = "TRUE" ] || \
-	[ "${YOLO}" = "true" ] || [ "${YOLO}" = "TRUE" ]; then \
- 	apt-get install -y \
+  	apt-get install -y \
  		libjpeg-dev \
  		libpango1.0-dev \
  		libgif-dev \
@@ -146,14 +126,10 @@ RUN \
  		g++-6 \
  		libxvidcore-dev \
  		libatlas-base-dev \
- 		gfortran ;\
- 	fi
+ 		gfortran
+ 	
 
 RUN \
- if [ "${OPENCV}" = "true" ] || [ "${OPENCV}" = "TRUE" ] || \
-	[ "${OPENALPR}" = "true" ] || [ "${OPENALPR}" = "TRUE" ] || \
-	[ "${YOLO_TINY}" = "true" ] || [ "${YOLO_TINY}" = "TRUE" ] || \
-	[ "${YOLO}" = "true" ] || [ "${YOLO}" = "TRUE" ]; then \
  	apt install -y \
 	 	cmake \
 	 	unzip \
@@ -181,27 +157,23 @@ RUN \
 	 	libopencore-amrnb-dev \
 	 	libopencore-amrwb-dev \
 	 	v4l-utils \
-	 	libleptonica-dev ;\
-	fi
+	 	libleptonica-dev
+	
 
 RUN	\
- if [ "${OPENCV}" = "true" ] || [ "${OPENCV}" = "TRUE" ] || \
-	[ "${OPENALPR}" = "true" ] || [ "${OPENALPR}" = "TRUE" ] || \
-	[ "${YOLO_TINY}" = "true" ] || [ "${YOLO_TINY}" = "TRUE" ] || \
-	[ "${YOLO}" = "true" ] || [ "${YOLO}" = "TRUE" ]; then \
 	echo "Downloading OpenCV..." && \
-    cd /opencv && \
-    git clone https://github.com/opencv/opencv.git && \
-    cd opencv && \
-    git checkout 3.4.0 && \
-    cd .. && \
-    if [ ! -e "/opencv/opencv_contrib" ]; then \
-        echo "Downloading OpenCV Modules..." && \
-        cd /opencv && \
-        git clone https://github.com/opencv/opencv_contrib.git && \
-        cd opencv_contrib && \
-        git checkout 3.4.0 && \
-        cd .. ;\
+    	cd /opencv && \
+    	git clone https://github.com/opencv/opencv.git && \
+    	cd opencv && \
+    	git checkout 3.4.0 && \
+    	cd .. && \
+    	if [ ! -e "/opencv/opencv_contrib" ]; then \
+	        echo "Downloading OpenCV Modules..." && \
+	        cd /opencv && \
+        	git clone https://github.com/opencv/opencv_contrib.git && \
+        	cd opencv_contrib && \
+        	git checkout 3.4.0 && \
+	        cd .. ;\
 	fi; \
 	LD_LIBRARY_PATH=/usr/local/cuda/lib && \
 	PATH=$PATH:/usr/local/cuda/bin && \
@@ -217,13 +189,10 @@ RUN	\
 	ldconfig && \
 	apt-get update && \
 	cd / && \
-	rm -rf /opencv/* ;\
- fi
+	rm -rf /opencv/*
 
 #Install Cuda Toolkit
  RUN \
- if [ "${YOLO_TINY}" = "true" ] || [ "${YOLO_TINY}" = "TRUE" ] || \
-	[ "${YOLO}" = "true" ] || [ "${YOLO}" = "TRUE" ]; then \
 	if [ "${NVIDIA_GPU}" = "true" ] || [ "${NVIDIA_GPU}" = "TRUE" ]; then \
  		echo "------------------------------------------" && \
  		echo "-- Installing CUDA Toolkit and CUDA DNN --" && \
@@ -245,33 +214,30 @@ RUN	\
  		dpkg -i cuda-dnn-dev.deb && \
  		echo "-- Cleaning Up --" && \
  		rm -f *.deb; \
- 	fi ; \
-fi
+ 	fi
 
 
 ## Set up Yolo if Variable is set
 WORKDIR /opt/shinobi/plugins/yolo
 RUN \
- if [ "${YOLO_TINY}" = "true" ] || [ "${YOLO_TINY}" = "TRUE" ] || \
-	[ "${YOLO}" = "true" ] || [ "${YOLO}" = "TRUE" ]; then \
-		weightNameExtension="" && \
-		cp conf.sample.json conf.json ; \
+	weightNameExtension="" && \
+	cp conf.sample.json conf.json ; \
 	if [ "${YOLO_TINY}" = "true" ] || [ "${YOLO_TINY}" = "TRUE" ]; then \
-    	weightNameExtension="-tiny"; \
-    fi;\
-    if [ ! -d "models" ]; then \
+    		weightNameExtension="-tiny"; \
+    	fi;\
+    	if [ ! -d "models" ]; then \
 		echo "Downloading yolov3 weights..." && \
    		mkdir models && \
-    	wget -O models/yolov3.weights https://pjreddie.com/media/files/yolov3$weightNameExtension.weights; \
+    		wget -O models/yolov3.weights https://pjreddie.com/media/files/yolov3$weightNameExtension.weights; \
 	else \
-    	echo "yolov3 weights found..."; \
+    		echo "yolov3 weights found..."; \
 	fi; \
 	echo "-----------------------------------"; \
 	if [ ! -d "models/cfg" ]; then \
-    	echo "Downloading yolov3 cfg" && \
-    	mkdir models/cfg && \
-    	wget -O models/cfg/coco.data https://raw.githubusercontent.com/pjreddie/darknet/master/cfg/coco.data && \
-    	wget -O models/cfg/yolov3.cfg https://raw.githubusercontent.com/pjreddie/darknet/master/cfg/yolov3$weightNameExtension.cfg;\
+    		echo "Downloading yolov3 cfg" && \
+    		mkdir models/cfg && \
+    		wget -O models/cfg/coco.data https://raw.githubusercontent.com/pjreddie/darknet/master/cfg/coco.data && \
+    		wget -O models/cfg/yolov3.cfg https://raw.githubusercontent.com/pjreddie/darknet/master/cfg/yolov3$weightNameExtension.cfg;\
 	else \
 		echo "yolov3 cfg found..."; \
 	fi; \
@@ -295,32 +261,16 @@ RUN \
 	npm install --unsafe-perm && \
 	npm install node-yolo-shinobi --unsafe-perm && \
 	npm install imagickal --unsafe-perm && \
-	npm audit fix --force ;\
-fi
+	npm audit fix --force
+
 WORKDIR /opt/shinobi
 
-COPY pm2Shinobi.yml pm2Shinobi-yolo.yml pm2Shinobi-yolo-only.yml docker-entrypoint.sh /opt/shinobi/
+COPY pm2Shinobi-yolo-only.yml docker-entrypoint.sh /opt/shinobi/
 RUN chmod -f +x ./*.sh
 
-ARG PLUGINONLY
-ENV PLUGINONLY=$PLUGINONLY
+RUN mv pm2Shinobi-yolo-only.yml pm2Shinobi.yml
 
-RUN \
-	if [ "${PLUGINONLY}" = "true" ] || [ "${PLUGINONLY}" = "TRUE" ]; then \
-	mv pm2Shinobi.yml pm2Shinobi.yml.bak && \
-	mv pm2Shinobi-yolo-only.yml pm2Shinobi.yml ;\
-	else \
-	mv pm2Shinobi.yml pm2Shinobi.yml.bak && \
-	mv pm2Shinobi-yolo.yml pm2Shinobi.yml ;\
-	fi
-
-# Copy default configuration files
-COPY ./config/conf.sample.json ./config/super.sample.json /opt/shinobi/
-
-VOLUME ["/opt/shinobi/videos"]
 VOLUME ["/config"]
-VOLUME ["/var/lib/mysql"]
-VOLUME ["/opt/dbdata"]
 
 EXPOSE 8080
 EXPOSE 8082
