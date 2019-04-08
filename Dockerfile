@@ -268,7 +268,7 @@ RUN \
 	npm audit fix --force
 
 WORKDIR /opt/shinobi
-
+COPY config/* /opt/shinobi/
 COPY pm2yolo.yml docker-entrypoint.sh /opt/shinobi/
 RUN chmod -f +x ./*.sh
 
