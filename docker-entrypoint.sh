@@ -15,21 +15,26 @@ if [ -d /config ]; then
     cp -R -f "/config/"* /opt/shinobi || echo "No custom config files found." 
 fi
 
-	if [ ! -f /opt/shinobi/plugins/yolo/${YOLO_MODE} ] ; then
-    	echo "Create default config file /opt/shinobi/plugins/yolo/conf.json ..."
-    	cp /opt/shinobi/yolo.${YOLO_MODE}.sample.json /opt/shinobi/plugins/yolo/conf.json &&\
-	touch /opt/shinobi/plugins/yolo/${YOLO_MODE}
+if [ ! -f /opt/shinobi/plugins/yolo/"${YOLO_MODE}" ]; then
+    	echo "Create config file /opt/shinobi/plugins/yolo/conf.json ..."
+    	cp /opt/shinobi/yolo."${YOLO_MODE}".sample.json /opt/shinobi/plugins/yolo/conf.json
+	touch /opt/shinobi/plugins/yolo/"${YOLO_MODE}"
+	else
+	if [ ! -f /opt/shinobi/plugins/yolo/conf.json ]; then 
+		echo "Create default config file /opt/shinobi/plugins/yolo/conf.json ..."
+    		cp /opt/shinobi/plugins/yolo/conf.sample.json /opt/shinobi/plugins/yolo/conf.json
 	fi
+fi
 
 
 
 # Set keys for PLUGIN ...
 echo "- Set keys for PLUGIN from environment variables ..."
-if [ "${YOLO_MODE}" = "host" ]; then \	
-	sed -i 	-e 's/"hostPort":8082/"hostPort":"'"${YOLO_PORT}"'"/g' \
-	       	-e 's/"key":"Yolo123123"/"key":"'"${PLUGINKEY_YOLO}"'"/g' \
-       		"/opt/shinobi/plugins/yolo/conf.json" ;\
-else \
+if [ "${YOLO_MODE}" = "host" ]; then	
+	sed -i -e 's/"hostPort":8082/"hostPort":"'"${YOLO_PORT}"'"/g' \
+	       -e 's/"key":"Yolo123123"/"key":"'"${PLUGINKEY_YOLO}"'"/g' \
+       	       "/opt/shinobi/plugins/yolo/conf.json"
+	else
 	sed -i -e 's/"host":"localhost"/"host":"'"${YOLO_HOST}"'"/g' \
        	       -e 's/"port":8080/"port":"'"${YOLO_PORT}"'"/g' \
 	       -e 's/"key":"Yolo123123"/"key":"'"${PLUGINKEY_YOLO}"'"/g' \
@@ -37,42 +42,40 @@ else \
 fi
 
 
-if [ "${YOLO_TINY}" = "true" ] || [ "${YOLO_TINY}" = "TRUE" ]; then \
-   weightNameExtension="-tiny"
-   else \
-   weightNameExtension=""
+if [ "${YOLO_TINY}" = "true" ] || [ "${YOLO_TINY}" = "TRUE" ]; then
+	weightNameExtension="-tiny"
+	else
+	weightNameExtension=""
 fi
 
 cd /opt/shinobi/plugins/yolo
-if [ ! -d "models" ]; then \
+if [ ! -d "models" ]; then
     mkdir models
 fi
-if [ ! -f "models/cfg/coco.data" ]; then \
-    mkdir models/cfg &&\
+if [ ! -f "models/cfg/coco.data" ]; then
+    mkdir models/cfg
     wget -O models/cfg/coco.data https://raw.githubusercontent.com/pjreddie/darknet/master/cfg/coco.data 
-    else \
-        echo "yolov3 coco.data found..."; 
+    else
+        echo "yolov3 coco.data found..."
 fi
 
-if [ ! -f "models/data/coco.names" ]; then \
-    mkdir -p models/data &&\
-    wget -O models/data/coco.names https://raw.githubusercontent.com/pjreddie/darknet/master/data/coco.names; \
-	else \
-		echo "yolov3 coco.names found..."; \
+if [ ! -f "models/data/coco.names" ]; then
+	mkdir -p models/data
+    	wget -O models/data/coco.names https://raw.githubusercontent.com/pjreddie/darknet/master/data/coco.names
+	else
+	echo "yolov3 coco.names found..."
 fi
 
-if [ -f ".weights${weightNameExtension}" ] then \
-    if [ -f "models/yolov3.weights" ] || [ -f "models/cfg/yolov3.cfg" ] then \
-        echo "yolov3 weights or cfg found..."; \
+if [ -f ".weights${weightNameExtension}" ]; then
+    if [ -f "models/yolov3.weights" ] || [ -f "models/cfg/yolov3.cfg" ]; then
+        echo "yolov3 weights or cfg found..."
     fi
     else
     rm -f .weights* &&\
-    echo "Downloading new yolov3 weights..." &&\
-    wget -O models/yolov3.weights https://pjreddie.com/media/files/yolov3$weightNameExtension.weights &&\
-    wget -O models/cfg/yolov3.cfg https://raw.githubusercontent.com/pjreddie/darknet/master/cfg/yolov3$weightNameExtension.cfg &&\
+    echo "Downloading new yolov3 weights..."
+    wget -O models/yolov3.weights https://pjreddie.com/media/files/yolov3$weightNameExtension.weights
+    wget -O models/cfg/yolov3.cfg https://raw.githubusercontent.com/pjreddie/darknet/master/cfg/yolov3$weightNameExtension.cfg
     touch .weights${weightNameExtension}
-fi
-
 fi
 
 
