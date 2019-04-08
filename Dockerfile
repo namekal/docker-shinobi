@@ -1,51 +1,188 @@
-FROM migoller/shinobidocker:debian
+#FROM migoller/shinobidocker:debian
+FROM node:8
 
-VOLUME /opencv
+ARG ARG_APP_VERSION 
 
-ENV NVIDIA_GPU=false \
+# The channel or branch triggering the build.
+ARG ARG_APP_CHANNEL
+
+# The commit sha triggering the build.
+ARG ARG_APP_COMMIT
+
+# Update Shinobi on every container start?
+#   manual:     Update Shinobi manually. New Docker images will always retrieve the latest version.
+#   auto:       Update Shinobi on every container start.
+ARG ARG_APP_UPDATE=manual
+
+# Build data
+ARG ARG_BUILD_DATE
+
+
+# Basic build-time metadata as defined at http://label-schema.org
+LABEL org.label-schema.build-date=${ARG_BUILD_DATE} \
+    org.label-schema.docker.dockerfile="/Dockerfile" \
+    org.label-schema.license="GPLv3" \
+    org.label-schema.name="MiGoller" \
+    org.label-schema.vendor="MiGoller" \
+    org.label-schema.version=${ARG_APP_VERSION} \
+    org.label-schema.description="Shinobi Pro - The Next Generation in Open-Source Video Management Software" \
+    org.label-schema.url="https://gitlab.com/users/MiGoller/projects" \
+    org.label-schema.vcs-ref=${ARG_APP_COMMIT} \
+    org.label-schema.vcs-type="Git" \
+    org.label-schema.vcs-url="https://gitlab.com/MiGoller/ShinobiDocker.git" \
+    maintainer="MiGoller" \
+    Author="MiGoller, mrproper, pschmitt & moeiscool"
+
+# Persist app-reladted build arguments
+ENV APP_VERSION=$ARG_APP_VERSION \
+    APP_CHANNEL=$ARG_APP_CHANNEL \
+    APP_COMMIT=$ARG_APP_COMMIT \
+    APP_UPDATE=$ARG_APP_UPDATE
+
+VOLUME ["/opencv"]
+
+# Set environment variables to default values
+# ADMIN_USER : the super user login name
+# ADMIN_PASSWORD : the super user login password
+# PLUGINKEY_MOTION : motion plugin connection key
+# PLUGINKEY_OPENCV : opencv plugin connection key
+# PLUGINKEY_OPENALPR : openalpr plugin connection key
+ENV ADMIN_USER=admin@shinobi.video \
+	ADMIN_PASSWORD=admin \
+	CRON_KEY=fd6c7849-904d-47ea-922b-5143358ba0de \
+	PLUGINKEY_MOTION=b7502fd9-506c-4dda-9b56-8e699a6bc41c \
+	PLUGINKEY_OPENCV=f078bcfe-c39a-4eb5-bd52-9382ca828e8a \
+	PLUGINKEY_OPENALPR=dbff574e-9d4a-44c1-b578-3dc0f1944a3c \
+	PLUGINKEY_YOLO=Yolo123123 \
+	#leave these ENVs alone unless you know what you are doing
+	MYSQL_USER=majesticflame \
+	MYSQL_PASSWORD=password \
+	MYSQL_HOST=localhost \
+	MYSQL_DATABASE=ccio \
+	MYSQL_ROOT_PASSWORD=blubsblawoot \
+	MYSQL_ROOT_USER=root \
+	NVIDIA_GPU=false \
 	OPENCV=false \
 	OPENALPR=false \
 	YOLO=false \
 	YOLO_TINY=true \
 	YOLO_HOST=localhost \
 	YOLO_PORT="8080" \
-	APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 \
-	PLUGINKEY_YOLO=574e44c1-dbff-3dc0-0f94-9d4a3dc0f194
+	APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1
 
-#ADMIN_USER=admin@shinobi.video \
-#ADMIN_PASSWORD=admin \
-#CRON_KEY=fd6c7849-904d-47ea-922b-5143358ba0de \
-#PLUGINKEY_MOTION=b7502fd9-506c-4dda-9b56-8e699a6bc41c \
-#PLUGINKEY_OPENCV=f078bcfe-c39a-4eb5-bd52-9382ca828e8a \
-#PLUGINKEY_OPENALPR=dbff574e-9d4a-44c1-b578-3dc0f1944a3c \
-##leave these ENVs alone unless you know what you are doing
-#MYSQL_USER=majesticflame \
-#MYSQL_PASSWORD=password \
-#MYSQL_HOST=localhost \
-#MYSQL_DATABASE=ccio \
-#MYSQL_ROOT_PASSWORD=blubsblawoot \
-#MYSQL_ROOT_USER=root
+RUN mkdir -p \
+        /config \
+        /opt/shinobi \
+        /var/lib/mysql \
+        /opt/dbdata
+
+WORKDIR /opt/shinobi
+
+RUN echo "deb http://archive.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
+
+# Install package dependencies
+RUN apt-get update && \
+    apt-get install -y \
+        libfreetype6-dev \
+        libgnutls28-dev \
+        libmp3lame-dev \
+        libass-dev \
+        libogg-dev \
+        libtheora-dev \
+        libvorbis-dev \
+        libvpx-dev \
+        libwebp-dev \
+        libssh2-1-dev \
+        libopus-dev \
+        librtmp-dev \
+        libx264-dev \
+        libx265-dev \
+        yasm && \
+    apt-get install -y \
+        build-essential \
+        bzip2 \
+        coreutils \
+        gnutls-bin \
+        nasm \
+        tar \
+        x264
+
+# Install additional packages
+
+RUN apt-get install -y \
+        ffmpeg \
+        git \
+        libsqlite3-dev \
+        make \
+        mariadb-client \
+        openrc \
+        pkg-config \
+        python \
+        socat \
+        sqlite \
+        wget \
+        xz-utils
+
+
+# Clone the Shinobi CCTV PRO repo and install Shinobi app including NodeJS dependencies
+RUN git clone https://gitlab.com/Shinobi-Systems/Shinobi.git /opt/shinobi && \
+    npm i npm@latest -g && \
+    npm install pm2 -g && \
+    npm install jsonfile && \
+    npm install sqlite3 && \
+    npm install --unsafe-perm && \
+    npm audit fix --force
+
 
 RUN \
  if [ "${OPENCV}" = "true" ] || [ "${OPENCV}" = "TRUE" ] || \
 	[ "${OPENALPR}" = "true" ] || [ "${OPENALPR}" = "TRUE" ] || \
 	[ "${YOLO_TINY}" = "true" ] || [ "${YOLO_TINY}" = "TRUE" ] || \
 	[ "${YOLO}" = "true" ] || [ "${YOLO}" = "TRUE" ]; then \
- 	apt-get update && \
  	apt-get install -y \
- 		libjpeg-dev libpango1.0-dev libgif-dev build-essential gcc-6 g++-6 \
- 		libxvidcore-dev libx264-dev \
- 		libatlas-base-dev gfortran \
- 		&& \
+ 		libjpeg-dev \
+ 		libpango1.0-dev \
+ 		libgif-dev \
+ 		gcc-6 \
+ 		g++-6 \
+ 		libxvidcore-dev \
+ 		libatlas-base-dev \
+ 		gfortran ;\
+ 	fi
+
+RUN \
+ if [ "${OPENCV}" = "true" ] || [ "${OPENCV}" = "TRUE" ] || \
+	[ "${OPENALPR}" = "true" ] || [ "${OPENALPR}" = "TRUE" ] || \
+	[ "${YOLO_TINY}" = "true" ] || [ "${YOLO_TINY}" = "TRUE" ] || \
+	[ "${YOLO}" = "true" ] || [ "${YOLO}" = "TRUE" ]; then \
  	apt install -y \
-	 	build-essential cmake pkg-config unzip ffmpeg qtbase5-dev \
-	 	python-dev python3-dev python-numpy python3-numpy libhdf5-dev \
-	 	libgtk-3-dev libdc1394-22 libdc1394-22-dev libjpeg-dev libtiff5-dev \
-	 	libtesseract-dev libavcodec-dev libavformat-dev libswscale-dev \
-	 	libxine2-dev libgstreamer-plugins-base1.0-0 \
-	 	libgstreamer-plugins-base1.0-dev libpng16-16 libpng-dev libv4l-dev \
-	 	libtbb-dev libmp3lame-dev libopencore-amrnb-dev libopencore-amrwb-dev \
-	 	libtheora-dev libvorbis-dev libxvidcore-dev v4l-utils libleptonica-dev ; \
+	 	cmake \
+	 	unzip \
+	 	qtbase5-dev \
+	 	python-dev \
+	 	python3-dev \
+	 	python-numpy \
+	 	python3-numpy \
+	 	libhdf5-dev \
+	 	libgtk-3-dev \
+	 	libdc1394-22 \
+	 	libdc1394-22-dev \
+	 	libtiff5-dev \
+	 	libtesseract-dev \
+	 	libavcodec-dev \
+	 	libavformat-dev \
+	 	libswscale-dev \
+	 	libxine2-dev \
+	 	libgstreamer-plugins-base1.0-0 \
+	 	libgstreamer-plugins-base1.0-dev \
+	 	libpng16-16 \
+	 	libpng-dev \
+	 	libv4l-dev \
+	 	libtbb-dev \
+	 	libopencore-amrnb-dev \
+	 	libopencore-amrwb-dev \
+	 	v4l-utils \
+	 	libleptonica-dev ;\
 	fi
 
 RUN	\
@@ -81,7 +218,7 @@ RUN	\
 	ldconfig && \
 	apt-get update && \
 	cd / && \
-	rm -rf /opencv/* ; \
+	rm -rf /opencv/* ;\
  fi
 
 #Install Cuda Toolkit
@@ -113,7 +250,8 @@ RUN	\
 fi
 
 WORKDIR /opt/shinobi
-COPY pm2Shinobi-yolo.yml ./
+COPY pm2Shinobi-yolo.yml pm2Shinobi-yolo-only.yml docker-entrypoint.sh ./
+RUN chmod -f +x ./*.sh
 
 ## Set up Yolo if Variable is set
 WORKDIR /opt/shinobi/plugins/yolo
@@ -173,9 +311,15 @@ RUN \
 	mv pm2Shinobi-yolo.yml pm2Shinobi.yml ;\
 	fi
 
+# Copy default configuration files
+COPY ./config/conf.sample.json ./config/super.sample.json /opt/shinobi/
+
 VOLUME ["/opt/shinobi/videos"]
 VOLUME ["/config"]
 VOLUME ["/var/lib/mysql"]
+VOLUME ["/opt/dbdata"]
+
+EXPOSE 8080
 
 ENTRYPOINT ["/opt/shinobi/docker-entrypoint.sh"]
 
