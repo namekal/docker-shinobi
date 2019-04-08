@@ -45,12 +45,15 @@ VOLUME ["/opencv"]
 
 # Set environment variables to default values
 ENV 	PLUGINKEY_YOLO=Yolo123123 \
-	YOLO_TINY=true \
-	NVIDIA_GPU=false \
+	YOLO_TINY=false \
 	YOLO_HOST=localhost \
 	YOLO_PORT="8080" \
+	YOLO_MODE="client" \
 	#leave these ENVs alone unless you know what you are doing
-	APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1
+	APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1 \
+	# CURRENTLY NOT SUPPORTED
+	# ENABLE ONLY FOR ATTEMPTING TO HELP PROVIDE A SOLUTION
+	NVIDIA_GPU=false
 
 RUN \
 	mkdir -p \
@@ -265,16 +268,13 @@ RUN \
 
 WORKDIR /opt/shinobi
 
-COPY pm2Shinobi-yolo-only.yml docker-entrypoint.sh /opt/shinobi/
+COPY pm2yolo.yml docker-entrypoint.sh /opt/shinobi/
 RUN chmod -f +x ./*.sh
-
-RUN mv pm2Shinobi-yolo-only.yml pm2Shinobi.yml
 
 VOLUME ["/config"]
 
-EXPOSE 8080
-EXPOSE 8082
+EXPOSE ${YOLO_PORT}
 
 ENTRYPOINT ["/opt/shinobi/docker-entrypoint.sh"]
 
-CMD ["pm2-docker", "pm2Shinobi.yml"]
+CMD ["pm2-docker", "pm2yolo.yml"]
