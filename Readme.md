@@ -1,5 +1,7 @@
 ### Yolo Plugin Docker Image for Shinobi CCTV
 
+Modified configs from Migoller - https://gitlab.com/MiGoller/ShinobiDocker
+
 | Environment Var | Value (**default**) |
 | ------ | ------ |
 | PLUGINKEY_YOLO | {random_string_of_characters} / **Yolo123123** |
