@@ -2,7 +2,7 @@
 
 Modified configs from Migoller - https://gitlab.com/MiGoller/ShinobiDocker
 
-| Environment Var | Value (**default**) |
+| Environment Var | Value (defaults are highlighted) |
 | ------ | ------ |
 | PLUGINKEY_YOLO | {random_string_of_characters} / **Yolo123123** |
 | YOLO_TINY | **true** / false |
