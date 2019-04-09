@@ -65,9 +65,9 @@ Add the `plugins` array if you don't already have it. Add the following *object 
       {
           "id" : "Yolo",
           "https" : false,
-          "host" : "<localhost or ip of the docker host>",
-          "port" : port_defined_in_YOLO_PORT,
-          "key" : "Yolo123123 <or key defined in PLUGINKEY_YOLO>",
+          "host" : "localhost", <Or_ip_of_the_docker_host>
+          "port" : 8082, <Must_be_port_defined_in_YOLO_PORT>
+          "key" : "Yolo123123", <Or_key_defined_in_PLUGINKEY_YOLO>
           "mode" : "host",
           "type" : "detector"
       }
