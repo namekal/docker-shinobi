@@ -45,7 +45,7 @@ VOLUME ["/opencv"]
 
 # Set environment variables to default values
 ENV	PLUGINKEY_YOLO=Yolo123123 \
-	YOLO_TINY=false \
+	YOLO_TINY=true \
 	YOLO_HOST=localhost \
 	YOLO_PORT="8080" \
 	YOLO_MODE="client" \
