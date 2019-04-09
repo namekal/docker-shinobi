@@ -48,6 +48,9 @@ docker run \
 ```
 
 ## Shinobi's **main configuration file** `conf.json` instructions:
+#### As of [Shinobi dev commit:`9877ac48`](https://gitlab.com/Shinobi-Systems/Shinobi/commit/9877ac480f0388dea40b0e7dea6f1c3bfbd8e01b):
+- `“oldPluginConnectionMethod”:true` must be defined in the configuration to allow object detection to work. (This will be temporarily needed until the new method is working)
+
 ### If `YOLO_MODE` is set as `client` (This is the default)
 Modify the `"pluginKeys" : {}` to add the key to the array.
 
