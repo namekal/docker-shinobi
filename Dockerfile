@@ -231,7 +231,8 @@ RUN \
 	if [ ! -d "models" ]; then \
 		echo "Downloading yolov3 weights..." && \
 		mkdir models && \
-		wget -O models/yolov3.weights https://pjreddie.com/media/files/yolov3$weightNameExtension.weights; \
+		wget -O models/yolov3.weights https://pjreddie.com/media/files/yolov3$weightNameExtension.weights &&\
+		touch ".weights${weightNameExtension}"; \
 	else \
 		echo "yolov3 weights found..."; \
 	fi; \
